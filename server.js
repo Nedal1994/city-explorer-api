@@ -6,51 +6,59 @@ const cors = require('cors')
 const weatherData = require('./assets/weather.json');
 
 const server = express();
-server.use(cors()); 
+server.use(cors());
 
 const PORT = process.env.PORT;
 
-class Forecast
-{
-    constructor(date,description)
-    {
-        this.date=date
-        this.description=description
+class Forecast {
+    constructor(item) {
+        this.date = item.valid_date
+        this.description = item.weather.description
     }
 }
 
-// http://localhost:3200/weather
-server.get('/weather',(req,res)=>{
+// http://localhost:3200/weather?city_name=Amman&lat=31.9515694&lon=35.9239625
+server.get('/weather', (req, res) => {
     const lat = req.query.lat;
     const lon = req.query.lon
     const city_name = req.query.city_name
-    const searchQuery = weatherData.find( (item) =>{
-        if(item.city_name===city_name && item.lat === lat 
-            && item.lon === lon)
-            {
-                 return item;
-            }
-        else
+    try {
+        
+        const searchQuery = weatherData.find((item) => 
         {
-            return 'Error'
-        }
-    })
-    let newArr = []
-    if(searchQuery !== 'Error')
-    {
-        searchQuery.data.forEach(item =>
-            {
-                newArr.push({
-                    description :`${item.weather.description}` ,
-                     date: `${item.datetime}`, maxTemp :`${item.max_temp}`,
-                      minTemp:`${item.min_temp}`
-                })
-            })
+            if (item.city_name === city_name && item.lat === lat
+                && item.lon === lon) 
+                {
+                return item;
+            }
             
-    res.send(newArr)
-    }
-})
+        })
+        console.log(searchQuery);
+        const data = searchQuery.data.map((item)=>
+        {
+            return new Forecast(item)
+        })
+        res.json(data)
+        // if (searchQuery !== 'Error') {
+        //     searchQuery.data.forEach(item => {
+        //         newArr.push({
+        //             description: `${item.weather.description}`,
+        //             date: `${item.datetime}`, maxTemp: `${item.max_temp}`,
+        //             minTemp: `${item.min_temp}`
+        //         })
+        //     })
 
-server.listen(PORT, () => {
-    console.log(`${PORT}`);
-})
+            // res.send(data)
+          }
+
+        catch 
+        {
+        res.send("Sorry there's an error")
+      }
+    })
+
+    
+
+    server.listen(PORT, () => {
+        console.log(`${PORT}`);
+    })
