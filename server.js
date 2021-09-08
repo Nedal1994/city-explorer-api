@@ -26,8 +26,8 @@ server.get('/weather', (req, res) => {
         
         const searchQuery = weatherData.find((item) => 
         {
-            if (item.city_name === city_name && item.lat === lat
-                && item.lon === lon) 
+            if (item.city_name === city_name || item.lat === lat
+                || item.lon === lon) 
                 {
                 return item;
             }
