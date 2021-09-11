@@ -1,9 +1,17 @@
 const axios = require('axios')
 
+let myMovies={}
+
 function moviesHandler(req,res)
 {
     const name = req.query.name
-    const moviesURL = `https://api.themoviedb.org/3/search/movie?query=${name}&api_key=${process.env.MOVIE_API_KEY}&language=en-US&page=1&include_adult=false`
+    if(myMovies[name] !== undefined)
+    {
+        console.log(myMovies[name]);
+    }
+    else
+    {
+        const moviesURL = `https://api.themoviedb.org/3/search/movie?query=${name}&api_key=${process.env.MOVIE_API_KEY}&language=en-US&page=1&include_adult=false`
     
     axios
     .get(moviesURL)
@@ -18,6 +26,8 @@ function moviesHandler(req,res)
     .catch(error => {
         console.log(error);
     })
+    }
+    
     class Movies {
         constructor(item) {
             this.title=item.title
