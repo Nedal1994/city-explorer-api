@@ -36,7 +36,7 @@ function moviesHandler(req,res)
             this.popularity=item.popularity
             this.vote_average=item.vote_average
             this.vote_count=item.vote_count
-            this.image_url=`https://image.tmdb.org/t/p/w500/${item.poster_path}`
+            this.poster_path=`https://image.tmdb.org/t/p/w500${item.poster_path}`
         }
     }
 }
